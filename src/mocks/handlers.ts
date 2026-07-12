@@ -1,0 +1,2 @@
+import {equipment} from './data'
+
