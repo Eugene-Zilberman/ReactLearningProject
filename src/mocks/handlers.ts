@@ -17,6 +17,8 @@ import {
   isEquipmentStatus,
 } from '../api/equipmentValidators';
 
+import {equipmentData} from './data'
+
 const API_DELAY = 500;
 
 type EquipmentField = keyof CreateEquipmentInput;
@@ -57,32 +59,7 @@ const EQUIPMENT_INPUT_FIELDS = new Set<string>([
 ]);
 
 function createInitialEquipment(): Equipment[] {
-  return [
-    {
-      id: 1,
-      name: 'Microscope A',
-      category: 'microscope',
-      status: 'available',
-      room: '201',
-      lastCalibrationDate: '2026-06-10',
-    },
-    {
-      id: 2,
-      name: 'Centrifuge B',
-      category: 'centrifuge',
-      status: 'maintenance',
-      room: '105',
-      lastCalibrationDate: null,
-    },
-    {
-      id: 3,
-      name: 'Analyzer X',
-      category: 'analyzer',
-      status: 'in-use',
-      room: '305',
-      lastCalibrationDate: '2026-07-01',
-    },
-  ];
+  return [...equipmentData];
 }
 
 let equipment: Equipment[] =

@@ -4,6 +4,8 @@ export const EQUIPMENT_STATUSES = [
   'maintenance',
 ] as const;
 
+export const EQUIPMENT_STATUS_SELECT = [...EQUIPMENT_STATUSES, 'all'] as const;
+
 export type EquipmentStatus =
   (typeof EQUIPMENT_STATUSES)[number];
 
@@ -14,6 +16,7 @@ export const EQUIPMENT_CATEGORIES = [
   'other',
 ] as const;
 
+export const EQUIPMENT_CATEGORY_SELECT = [...EQUIPMENT_CATEGORIES, 'all'] as const;
 
 export type EquipmentCategory =
   (typeof EQUIPMENT_CATEGORIES)[number];
