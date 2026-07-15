@@ -5,6 +5,7 @@ import {
 
 import {
   getEquipment,
+  createEquipment
 } from './api/equipmentApi';
 
 import {
@@ -16,10 +17,12 @@ import type {
   CategoryFilter,
   EquipmentRequestState,
   StatusFilter,
+  EquipmentFormState,
+  CreateEquipmentInput
 } from './types/equipment';
 
 import { EquipmentFilters } from './components/EquipmentFilters';
-
+import { EquipmentForm } from './components/EquipmentForms';
 export default function App() {
   const [requestState, setRequestState] =
     useState<EquipmentRequestState>({
@@ -28,6 +31,7 @@ export default function App() {
   const [searchTextState, setSearchTextState] = useState('');
   const [statusFilterState, setStatusFilterState] = useState<StatusFilter>('all');
   const [categoryFilterState, setCategoryFilterState] = useState<CategoryFilter>('all');
+  const [formState, setFormState] = useState<EquipmentFormState>({status: 'closed'});
   useEffect(() => {
     const controller = new AbortController();
     async function loadEquipment() {
@@ -68,6 +72,24 @@ export default function App() {
   function handleCategoryChange(category: CategoryFilter): void {
     setCategoryFilterState(category);
   }
+  async function handleSuccessfulSubmit(input: CreateEquipmentInput) : Promise<void>
+  {
+    try{
+      setFormState({status: 'submitting'});
+      const newEquipment = await createEquipment(input);
+      setRequestState(current => {
+        if (current.status !== 'success')
+          return current;
+
+        return {status: 'success', equipment: [...current.equipment, newEquipment]};
+      })
+      setFormState({status: 'closed'});
+    }
+    catch(error)
+    {
+      setFormState({status: 'error', message: error instanceof Error ? error.message : 'Unknown error' });
+    }
+  }
 
   switch (requestState.status) {
     case 'loading':
@@ -78,8 +100,9 @@ export default function App() {
     case 'success':
       if (requestState.equipment.length === 0)
         return <h1>Список оборудования пуст</h1>;
-      else {
-        return <div>
+      else 
+        {
+        return (<div>
           <EquipmentFilters onCategoryChange={handleCategoryChange}
           onSearchChange={handleSearchChange}
           onStatusChange={handleStatusChange}
@@ -87,7 +110,23 @@ export default function App() {
           selectedCategory={categoryFilterState}
           selectedStatus={statusFilterState}/>
           <EquipmentList equipment={applyFilterConditions()} />
-          </div>;
+          {(() => {
+            switch (formState.status)
+            {
+              case 'closed':
+                return <button type='button' onClick={() => setFormState({status: 'opened'})}>Окрыть форму</button>
+              case 'opened':
+              case 'error':
+              case 'submitting':
+                return (<div>
+                  {(() => formState.status === 'error' ? (<h1>{formState.message}</h1>) : null)()}
+                  <EquipmentForm onSuccessfulSubmit={handleSuccessfulSubmit} 
+                onCancel={() => setFormState({status: 'closed'})} isSubmitting={formState.status === 'submitting' ? true : false}/>
+                </div>)
+            }
+          })()}
+          </div>
+          );
       }
     default:
       console.log('Something went wrong');

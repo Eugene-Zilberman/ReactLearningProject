@@ -44,5 +44,11 @@ export type EquipmentRequestState =
 
 export type StatusFilter = 'all' | EquipmentStatus;
 export type CategoryFilter = 'all' | EquipmentCategory;
+export type EquipmentFormState = 
+  | {status: 'closed'}
+  | {status: 'opened'}
+  | {status: 'submitting'}
+  | {status: 'error', message: string}
+
 
 
