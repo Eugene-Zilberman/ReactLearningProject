@@ -44,11 +44,30 @@ export type EquipmentRequestState =
 
 export type StatusFilter = 'all' | EquipmentStatus;
 export type CategoryFilter = 'all' | EquipmentCategory;
-export type EquipmentFormState = 
-  | {status: 'closed'}
-  | {status: 'opened'}
-  | {status: 'submitting'}
-  | {status: 'error', message: string}
+type FormOperation =
+  | { mode: 'create' }
+  | { mode: 'edit'; equipment: Equipment };
+
+export type EquipmentFormState =
+  | { status: 'closed' }
+  | {
+      status: 'opened';
+      operation: FormOperation;
+    }
+  | {
+      status: 'submitting';
+      operation: FormOperation;
+    }
+  | {
+      status: 'error';
+      operation: FormOperation;
+      message: string;
+    };
+
+export type EquipmentDeleteState = 
+| {status: 'submitting'}
+| {status: 'success'}
+| {status: 'error', message: string}
 
 
 

@@ -16,7 +16,7 @@ import {
 } from '../types/equipment';
 
 
-type FormValues = {
+export type FormValues = {
   name: string;
   category: EquipmentCategory | '';
   status: EquipmentStatus | '';
@@ -99,16 +99,11 @@ type EquipmentFormProps = {
   onSuccessfulSubmit: (input: CreateEquipmentInput) => void;
   onCancel: () => void;
   isSubmitting: boolean;
+  initialFormValues: FormValues;
 }
 
-export function EquipmentForm({ onSuccessfulSubmit, onCancel, isSubmitting }: EquipmentFormProps) {
-  const [formState, setFormState] = useState<FormValues>({
-    name: '',
-    category: '',
-    status: '',
-    room: '',
-    lastCalibrationDate: '',
-  });
+export function EquipmentForm({ onSuccessfulSubmit, onCancel, isSubmitting, initialFormValues }: EquipmentFormProps) {
+  const [formState, setFormState] = useState<FormValues>(initialFormValues);
   const [formErrorsState, setFormErrorsState] = useState<errorMessages>({});
   function updateField<K extends keyof FormValues>(
     field: K,

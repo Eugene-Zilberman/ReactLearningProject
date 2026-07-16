@@ -5,9 +5,12 @@ import type {
 type EquipmentListProps =
   {
     equipment: Equipment[]
+    onEdit: (item: Equipment) => void;
+    onDelete: (itemId: number) => void;
+    isSubmitting: boolean;
   }
 
-export function EquipmentList({ equipment }: EquipmentListProps) {
+export function EquipmentList({ equipment, onEdit, onDelete, isSubmitting }: EquipmentListProps) {
   return (
     <table>
       <caption>Список лабораторного оборудования</caption>
@@ -35,8 +38,8 @@ export function EquipmentList({ equipment }: EquipmentListProps) {
             }
           
             <td>
-              <button type="button">Редактировать</button>
-              <button type="button">Удалить</button>
+              <button disabled={isSubmitting === true} onClick={() => onEdit(item)} type="button">Редактировать</button>
+              <button disabled={isSubmitting === true} onClick={() => onDelete(item.id)} type="button">Удалить</button>
             </td>
           </tr>
         ))}
